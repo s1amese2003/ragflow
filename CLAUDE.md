@@ -1,116 +1,116 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本文件为 Claude Code (claude.ai/code) 在此代码仓库中工作时提供指导。
 
-## Project Overview
+## 项目概述
 
-RAGFlow is an open-source RAG (Retrieval-Augmented Generation) engine based on deep document understanding. It's a full-stack application with:
-- Python backend (Flask-based API server)
-- React/TypeScript frontend (built with UmiJS)
-- Microservices architecture with Docker deployment
-- Multiple data stores (MySQL, Elasticsearch/Infinity, Redis, MinIO)
+RAGFlow 是一个基于深度文档理解的开源 RAG（检索增强生成）引擎。这是一个全栈应用，包含：
+- Python 后端（基于 Flask 的 API 服务器）
+- React/TypeScript 前端（使用 UmiJS 构建）
+- 微服务架构，支持 Docker 部署
+- 多种数据存储（MySQL、Elasticsearch/Infinity、Redis、MinIO）
 
-## Architecture
+## 架构说明
 
-### Backend (`/api/`)
-- **Main Server**: `api/ragflow_server.py` - Flask application entry point
-- **Apps**: Modular Flask blueprints in `api/apps/` for different functionalities:
-  - `kb_app.py` - Knowledge base management
-  - `dialog_app.py` - Chat/conversation handling
-  - `document_app.py` - Document processing
-  - `canvas_app.py` - Agent workflow canvas
-  - `file_app.py` - File upload/management
-- **Services**: Business logic in `api/db/services/`
-- **Models**: Database models in `api/db/db_models.py`
+### 后端 (`/api/`)
+- **主服务器**：`api/ragflow_server.py` - Flask 应用入口
+- **应用模块**：`api/apps/` 中的模块化 Flask 蓝图，负责不同功能：
+  - `kb_app.py` - 知识库管理
+  - `dialog_app.py` - 对话/会话处理
+  - `document_app.py` - 文档处理
+  - `canvas_app.py` - Agent 工作流画布
+  - `file_app.py` - 文件上传/管理
+- **服务层**：`api/db/services/` 中的业务逻辑
+- **数据模型**：`api/db/db_models.py` 中的数据库模型
 
-### Core Processing (`/rag/`)
-- **Document Processing**: `deepdoc/` - PDF parsing, OCR, layout analysis
-- **LLM Integration**: `rag/llm/` - Model abstractions for chat, embedding, reranking
-- **RAG Pipeline**: `rag/flow/` - Chunking, parsing, tokenization
-- **Graph RAG**: `rag/graphrag/` - Knowledge graph construction and querying
+### 核心处理 (`/rag/`)
+- **文档处理**：`deepdoc/` - PDF 解析、OCR、布局分析
+- **LLM 集成**：`rag/llm/` - 聊天、嵌入、重排序的模型抽象
+- **RAG 流水线**：`rag/flow/` - 分块、解析、分词
+- **图 RAG**：`rag/graphrag/` - 知识图谱构建和查询
 
-### Agent System (`/agent/`)
-- **Components**: Modular workflow components (LLM, retrieval, categorize, etc.)
-- **Templates**: Pre-built agent workflows in `agent/templates/`
-- **Tools**: External API integrations (Tavily, Wikipedia, SQL execution, etc.)
+### Agent 系统 (`/agent/`)
+- **组件**：模块化工作流组件（LLM、检索、分类等）
+- **模板**：`agent/templates/` 中的预构建 agent 工作流
+- **工具**：外部 API 集成（Tavily、Wikipedia、SQL 执行等）
 
-### Frontend (`/web/`)
-- React/TypeScript with UmiJS framework
-- Ant Design + shadcn/ui components
-- State management with Zustand
-- Tailwind CSS for styling
+### 前端 (`/web/`)
+- React/TypeScript，使用 UmiJS 框架
+- Ant Design + shadcn/ui 组件
+- 使用 Zustand 进行状态管理
+- Tailwind CSS 样式
 
-## Common Development Commands
+## 常用开发命令
 
-### Backend Development
+### 后端开发
 ```bash
-# Install Python dependencies
+# 安装 Python 依赖
 uv sync --python 3.12 --all-extras
 uv run download_deps.py
 pre-commit install
 
-# Start dependent services
+# 启动依赖服务
 docker compose -f docker/docker-compose-base.yml up -d
 
-# Run backend (requires services to be running)
+# 运行后端（需要先启动依赖服务）
 source .venv/bin/activate
 export PYTHONPATH=$(pwd)
 bash docker/launch_backend_service.sh
 
-# Run tests
+# 运行测试
 uv run pytest
 
-# Linting
+# 代码检查
 ruff check
 ruff format
 ```
 
-### Frontend Development
+### 前端开发
 ```bash
 cd web
 npm install
-npm run dev        # Development server
-npm run build      # Production build
-npm run lint       # ESLint
-npm run test       # Jest tests
+npm run dev        # 开发服务器
+npm run build      # 生产构建
+npm run lint       # ESLint 检查
+npm run test       # Jest 测试
 ```
 
-### Docker Development
+### Docker 开发
 ```bash
-# Full stack with Docker
+# 使用 Docker 运行完整堆栈
 cd docker
 docker compose -f docker-compose.yml up -d
 
-# Check server status
+# 查看服务器状态
 docker logs -f ragflow-server
 
-# Rebuild images
+# 重新构建镜像
 docker build --platform linux/amd64 -f Dockerfile -t infiniflow/ragflow:nightly .
 ```
 
-## Key Configuration Files
+## 关键配置文件
 
-- `docker/.env` - Environment variables for Docker deployment
-- `docker/service_conf.yaml.template` - Backend service configuration
-- `pyproject.toml` - Python dependencies and project configuration
-- `web/package.json` - Frontend dependencies and scripts
+- `docker/.env` - Docker 部署的环境变量
+- `docker/service_conf.yaml.template` - 后端服务配置
+- `pyproject.toml` - Python 依赖和项目配置
+- `web/package.json` - 前端依赖和脚本
 
-## Testing
+## 测试
 
-- **Python**: pytest with markers (p1/p2/p3 priority levels)
-- **Frontend**: Jest with React Testing Library
-- **API Tests**: HTTP API and SDK tests in `test/` and `sdk/python/test/`
+- **Python**：pytest，使用标记（p1/p2/p3 优先级）
+- **前端**：Jest 配合 React Testing Library
+- **API 测试**：`test/` 和 `sdk/python/test/` 中的 HTTP API 和 SDK 测试
 
-## Database Engines
+## 数据库引擎
 
-RAGFlow supports switching between Elasticsearch (default) and Infinity:
-- Set `DOC_ENGINE=infinity` in `docker/.env` to use Infinity
-- Requires container restart: `docker compose down -v && docker compose up -d`
+RAGFlow 支持在 Elasticsearch（默认）和 Infinity 之间切换：
+- 在 `docker/.env` 中设置 `DOC_ENGINE=infinity` 以使用 Infinity
+- 需要重启容器：`docker compose down -v && docker compose up -d`
 
-## Development Environment Requirements
+## 开发环境要求
 
 - Python 3.10-3.12
 - Node.js >=18.20.4
 - Docker & Docker Compose
-- uv package manager
-- 16GB+ RAM, 50GB+ disk space
+- uv 包管理器
+- 16GB+ 内存，50GB+ 磁盘空间
