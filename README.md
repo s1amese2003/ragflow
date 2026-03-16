@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
 <a href="https://demo.ragflow.io/">
 <img src="web/src/assets/logo-with-text.svg" width="520" alt="ragflow logo">
@@ -410,3 +411,6 @@ See the [RAGFlow Roadmap 2026](https://github.com/infiniflow/ragflow/issues/1224
 
 RAGFlow flourishes via open-source collaboration. In this spirit, we embrace diverse contributions from the community.
 If you would like to be a part, review our [Contribution Guidelines](https://ragflow.io/docs/dev/contributing) first.
+=======
+# ragflow
+>>>>>>> origin/main
